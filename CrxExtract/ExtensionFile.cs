@@ -26,7 +26,7 @@ namespace CrxExtract
 
             Version = reader.ReadInt32();
             if (Version != 3)
-                throw new Exception("Unknown file version");
+                throw new Exception(string.Format("Unknown file version ({0})", Version));
 
             int keySize = reader.ReadInt32();
             if (keySize > reader.BaseStream.Length - reader.BaseStream.Position)
