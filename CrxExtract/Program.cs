@@ -25,7 +25,7 @@ namespace CrxExtract
                     continue;
                 }
 
-                string directoryName = arg + "_out";
+                string outDirectory = arg + "_out";
 
                 ZipArchiveEntry manifest = file.ZipData.GetEntry("manifest.json");
                 if (manifest != null)
@@ -37,7 +37,7 @@ namespace CrxExtract
                     if (json != null)
                     {
                         if (json["name"] != null)
-                            directoryName = ((string)json["name"]).Trim(Path.GetInvalidFileNameChars());
+                            outDirectory = Path.Combine(Path.GetDirectoryName(arg), ((string)json["name"]).Trim(Path.GetInvalidFileNameChars()));
                         else
                             Console.WriteLine("Manifest JSON is missing a 'name' field!");
                     }
@@ -47,11 +47,11 @@ namespace CrxExtract
                 else
                     Console.WriteLine("Odd... there appears to be no manifest!", arg);
 
-                Directory.CreateDirectory(directoryName);
+                Directory.CreateDirectory(outDirectory);
 
                 foreach (ZipArchiveEntry entry in file.ZipData.Entries)
                 {
-                    string path = Path.Combine(directoryName, entry.FullName);
+                    string path = Path.Combine(outDirectory, entry.FullName);
                     if (path.EndsWith('\\') || path.EndsWith('/'))
                         Directory.CreateDirectory(path);
                     else
